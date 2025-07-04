@@ -1,15 +1,57 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+import json
+from google.oauth2.service_account import Credentials
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseUpload
+
+scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets', "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
+#creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
+# Use Streamlit's secrets management
+creds_dict = st.secrets["gcp_service_account"]
+# Extract individual attributes needed for ServiceAccountCredentials
+credentials = {
+    "type": creds_dict.type,
+    "project_id": creds_dict.project_id,
+    "private_key_id": creds_dict.private_key_id,
+    "private_key": creds_dict.private_key,
+    "client_email": creds_dict.client_email,
+    "client_id": creds_dict.client_id,
+    "auth_uri": creds_dict.auth_uri,
+    "token_uri": creds_dict.token_uri,
+    "auth_provider_x509_cert_url": creds_dict.auth_provider_x509_cert_url,
+    "client_x509_cert_url": creds_dict.client_x509_cert_url,
+}
+
+# Create JSON string for credentials
+creds_json = json.dumps(credentials)
+
+# Load credentials and authorize gspread
+creds = ServiceAccountCredentials.from_json_keyfile_dict(json.loads(creds_json), scope)
+client = gspread.authorize(creds)
+
+try:
+    spreadsheet1 = client.open('dv_intercepts_cleaned')
+    worksheet1 = spreadsheet1.worksheet('sheet1')
+    df = pd.DataFrame(worksheet1.get_all_records())
+except Exception as e:
+    st.error(f"Error fetching data from Google Sheets: {str(e)}")
 
 st.set_page_config(layout="wide")
 st.markdown(
-    "<h1 style='text-align: center;'>DV Map -- Prince William County</h1>",
+    "<div style='text-align: center;'><img src='https://github.com/JiaqinWu/GRIT_Website/raw/main/logo1.png' width='200'></div>",
     unsafe_allow_html=True
 )
+st.markdown(
+    "<h1 style='text-align: center; font-family: \"Times New Roman\", Times, serif;'>DV Map - Prince William County</h1>",
+    unsafe_allow_html=True
+)
+
 st.markdown("") 
 
-df = pd.read_csv("dv_intercepts_cleaned.csv")
 
 intercepts_labels = {
     "0": "Community Services",
@@ -74,8 +116,7 @@ highlight = alt.Chart(merged[merged["assigned"] == 1]).mark_rect().encode(
             "Jails/Courts", "Reentry", "Comm Corrections"
         ],
         legend=None
-    ),
-    tooltip=["Provider(s):N", "Intercept Label:N"]
+    )
 )
 
 chart = (base + highlight).properties(
@@ -84,7 +125,14 @@ chart = (base + highlight).properties(
 ).configure_axis(
     labelFontSize=12,
     titleFontSize=12,
-    labelLimit=350
+    labelLimit=350,
+    labelFont='Times New Roman',
+    titleFont='Times New Roman'
+).configure_title(
+    font='Times New Roman'
+).configure_legend(
+    labelFont='Times New Roman',
+    titleFont='Times New Roman'
 ).configure_view(
     strokeWidth=0
 )
