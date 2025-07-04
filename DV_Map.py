@@ -63,26 +63,29 @@ intercepts_labels = {
 }
 ordered_intercepts = [intercepts_labels[k] for k in sorted(intercepts_labels.keys())]
 
-df["Intercept"] = df["Intercept"].astype(str).str.split(",")
-df = df.explode("Intercept")
-df["Intercept"] = df["Intercept"].str.strip()
-df["Intercept Label"] = df["Intercept"].map(intercepts_labels)
-st.write(df)
+df1 = df.copy()
+df1["Intercept"] = df1["Intercept"].astype(str).str.split(",")
+df1 = df1.explode("Intercept")
+df1["Intercept"] = df1["Intercept"].str.strip()
+df1["Intercept Label"] = df1["Intercept"].map(intercepts_labels)
 
-all_providers = sorted(df["Provider(s)"].dropna().unique())
+
+all_providers = sorted(df1["Provider(s)"].dropna().unique())
 
 full_matrix = pd.MultiIndex.from_product(
     [all_providers, ordered_intercepts],
     names=["Provider(s)", "Intercept Label"]
 ).to_frame(index=False)
 
-df["assigned"] = 1
-merged = pd.merge(full_matrix, df[["Provider(s)", "Intercept Label", "assigned"]],
+df1["assigned"] = 1
+merged = pd.merge(full_matrix, df1[["Provider(s)", "Intercept Label", "assigned"]],
                   on=["Provider(s)", "Intercept Label"], how="left")
 merged["assigned"] = merged["assigned"].fillna(0)
 
 merged["Provider(s)"] = pd.Categorical(merged["Provider(s)"], categories=all_providers, ordered=True)
 merged["Intercept Label"] = pd.Categorical(merged["Intercept Label"], categories=ordered_intercepts, ordered=True)
+
+st.write(merged)
 
 base = alt.Chart(merged).mark_rect().encode(
     x=alt.X(
