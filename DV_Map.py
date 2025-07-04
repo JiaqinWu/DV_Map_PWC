@@ -54,17 +54,19 @@ st.markdown(
 st.markdown(
     """
     <style>
-    /* Set font for the sidebar */
+    /* Sidebar font */
     section[data-testid="stSidebar"] * {
         font-family: 'Times New Roman', Times, serif !important;
     }
-    div[data-baseweb="select"] * {
-        font-family: 'Times New Roman', Times, serif !important;
-    }
-    label[for^="provider_detail_select"] {
+    /* Main page selectbox and widget labels */
+    section.main label {
         font-family: 'Times New Roman', Times, serif !important;
         font-size: 16px !important;
         font-weight: bold;
+    }
+    /* Main page selectbox dropdowns */
+    div[data-baseweb="select"] * {
+        font-family: 'Times New Roman', Times, serif !important;
     }
     </style>
     """,
