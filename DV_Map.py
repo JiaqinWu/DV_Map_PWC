@@ -50,6 +50,18 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+st.markdown(
+    """
+    <style>
+    /* Set font for the sidebar */
+    section[data-testid="stSidebar"] * {
+        font-family: 'Times New Roman', Times, serif !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 st.markdown("") 
 
 
@@ -62,6 +74,25 @@ intercepts_labels = {
     "5": "Comm Corrections"
 }
 ordered_intercepts = [intercepts_labels[k] for k in sorted(intercepts_labels.keys())]
+
+# Sidebar UI
+st.sidebar.header("Select A Provider and Assign Intercepts")
+all_providers = df["Provider(s)"].dropna().unique().tolist()
+selected_provider = st.sidebar.selectbox("Select Provider", all_providers)
+intercept_options = list(intercepts_labels.values())
+selected_intercepts = st.sidebar.multiselect("Assign Intercepts", intercept_options)
+
+if st.sidebar.button("Update Assignment"):
+    # Find the row in the worksheet for the selected provider
+    provider_cells = worksheet1.findall(selected_provider)
+    if provider_cells:
+        row = provider_cells[0].row
+        intercept_keys = [k for k, v in intercepts_labels.items() if v in selected_intercepts]
+        INTERCEPTS_COLUMN_INDEX = 9
+        worksheet1.update_cell(row, INTERCEPTS_COLUMN_INDEX, ",".join(intercept_keys))
+        st.success("Assignment updated! Please refresh to see changes.")
+    else:
+        st.error("Provider not found in sheet.")
 
 def smart_split(val):
     val = str(val).strip()
@@ -94,8 +125,6 @@ merged["assigned"] = merged["assigned"].fillna(0)
 merged["Provider(s)"] = pd.Categorical(merged["Provider(s)"], categories=all_providers, ordered=True)
 merged["Intercept Label"] = pd.Categorical(merged["Intercept Label"], categories=ordered_intercepts, ordered=True)
 
-st.write(merged)
-
 base = alt.Chart(merged).mark_rect().encode(
     x=alt.X(
         "Intercept Label:N",
@@ -107,7 +136,8 @@ base = alt.Chart(merged).mark_rect().encode(
         axis=alt.Axis(labelAngle=0, labelFontSize=12, labelLimit=350, labelPadding=10)
     ),
     y=alt.Y("Provider(s):N", title=''),
-    color=alt.value("#eeeeee") 
+    color=alt.value("#eeeeee"),
+    tooltip=None
 )
 
 highlight = alt.Chart(merged[merged["assigned"] == 1]).mark_rect().encode(
@@ -129,7 +159,8 @@ highlight = alt.Chart(merged[merged["assigned"] == 1]).mark_rect().encode(
             "Jails/Courts", "Reentry", "Comm Corrections"
         ],
         legend=None
-    )
+    ),
+    tooltip=None
 )
 
 chart = (base + highlight).properties(
