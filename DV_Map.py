@@ -4,6 +4,7 @@ import altair as alt
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import json
+import time
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
@@ -90,14 +91,17 @@ if st.sidebar.button("Update Assignment"):
         intercept_keys = [k for k, v in intercepts_labels.items() if v in selected_intercepts]
         INTERCEPTS_COLUMN_INDEX = 9
         worksheet1.update_cell(row, INTERCEPTS_COLUMN_INDEX, ",".join(intercept_keys))
-        st.success("Assignment updated! Please refresh to see changes.")
+        st.sidebar.success("Assignment updated!")
+        time.sleep(3)
+        st.rerun()
     else:
-        st.error("Provider not found in sheet.")
+        st.sidebar.error("Provider not found in sheet.")
+
 
 def smart_split(val):
     val = str(val).strip()
     if "," in val:
-        return [v.strip() for v in val.split(",")]
+        return [v.strip() for v in val.split(",") if v.strip() != ""]
     elif val.isdigit():
         return list(val)
     else:
@@ -136,8 +140,7 @@ base = alt.Chart(merged).mark_rect().encode(
         axis=alt.Axis(labelAngle=0, labelFontSize=12, labelLimit=350, labelPadding=10)
     ),
     y=alt.Y("Provider(s):N", title=''),
-    color=alt.value("#eeeeee"),
-    tooltip=[]
+    color=alt.value("#eeeeee")
 )
 
 highlight = alt.Chart(merged[merged["assigned"] == 1]).mark_rect().encode(
@@ -159,8 +162,7 @@ highlight = alt.Chart(merged[merged["assigned"] == 1]).mark_rect().encode(
             "Jails/Courts", "Reentry", "Comm Corrections"
         ],
         legend=None
-    ),
-    tooltip=[]
+    )
 )
 
 chart = (base + highlight).properties(
