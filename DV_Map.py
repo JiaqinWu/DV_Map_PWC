@@ -196,3 +196,32 @@ chart = (base + highlight).properties(
 )
 
 st.altair_chart(chart, use_container_width=True)
+
+# --- Provider Details Section ---
+st.markdown("<hr>", unsafe_allow_html=True)
+st.header("View Provider Details")
+
+provider_detail_fields = [
+    "Provider(s)",
+    "Primary Contact Person (Name; Email)",
+    "Description of Services, Intervention, or Activity",
+    "Recipients",
+    "Criteria for Who Receives the Service",
+    "Research or Best Practice Supported Practice?",
+    "Legally Mandated Practice?",
+    "Notes",
+    "Gaps"
+]
+
+provider_detail_select = st.selectbox("Select a provider to view details:", all_providers, key="provider_detail_select")
+
+provider_row = df[df["Provider(s)"] == provider_detail_select]
+
+if not provider_row.empty:
+    for field in provider_detail_fields:
+        value = provider_row.iloc[0][field] if field in provider_row.columns else "NA"
+        if pd.isna(value) or value == "":
+            value = "NA"
+        st.markdown(f"**{field}:** {value}")
+else:
+    st.info("No details available for the selected provider.")
