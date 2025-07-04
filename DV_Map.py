@@ -170,7 +170,7 @@ chart = (base + highlight).properties(
     height=28 * len(all_providers)
 ).configure_axis(
     labelFontSize=12,
-    titleFontSize=12,
+    titleFontSize=10,
     labelLimit=350,
     labelFont='Times New Roman',
     titleFont='Times New Roman'
