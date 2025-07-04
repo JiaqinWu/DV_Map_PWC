@@ -63,8 +63,17 @@ intercepts_labels = {
 }
 ordered_intercepts = [intercepts_labels[k] for k in sorted(intercepts_labels.keys())]
 
+def smart_split(val):
+    val = str(val).strip()
+    if "," in val:
+        return [v.strip() for v in val.split(",")]
+    elif val.isdigit():
+        return list(val)
+    else:
+        return [val] if val else []
+
 df1 = df.copy()
-df1["Intercept"] = df1["Intercept"].astype(str).str.split(",")
+df1["Intercept"] = df1["Intercept"].apply(smart_split)
 df1 = df1.explode("Intercept")
 df1["Intercept"] = df1["Intercept"].str.strip()
 df1["Intercept Label"] = df1["Intercept"].map(intercepts_labels)
