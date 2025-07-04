@@ -222,6 +222,6 @@ if not provider_row.empty:
         value = provider_row.iloc[0][field] if field in provider_row.columns else "NA"
         if pd.isna(value) or value == "":
             value = "NA"
-        st.markdown(f"**{field}:** {value}")
+        st.markdown(f"<span style='font-family: \"Times New Roman\", Times, serif;'><b>{field}:</b> {value}</span>", unsafe_allow_html=True)
 else:
     st.info("No details available for the selected provider.")
