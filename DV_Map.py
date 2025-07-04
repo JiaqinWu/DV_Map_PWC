@@ -199,7 +199,7 @@ st.altair_chart(chart, use_container_width=True)
 
 # --- Provider Details Section ---
 st.markdown("<hr>", unsafe_allow_html=True)
-st.header("View Provider Details")
+st.markdown("<h2 style='font-family: \"Times New Roman\", Times, serif;'>View Provider Details</h2>", unsafe_allow_html=True)
 
 provider_detail_fields = [
     "Provider(s)",
@@ -213,7 +213,8 @@ provider_detail_fields = [
     "Gaps"
 ]
 
-provider_detail_select = st.selectbox("Select a provider to view details:", all_providers, key="provider_detail_select")
+st.markdown("<span style='font-family: \"Times New Roman\", Times, serif; font-size: 16px;'><b>Select a provider to view details:</b></span>", unsafe_allow_html=True)
+provider_detail_select = st.selectbox(" ", all_providers, key="provider_detail_select")
 
 provider_row = df[df["Provider(s)"] == provider_detail_select]
 
