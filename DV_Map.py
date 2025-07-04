@@ -67,6 +67,7 @@ df["Intercept"] = df["Intercept"].astype(str).str.split(",")
 df = df.explode("Intercept")
 df["Intercept"] = df["Intercept"].str.strip()
 df["Intercept Label"] = df["Intercept"].map(intercepts_labels)
+st.write(df)
 
 all_providers = sorted(df["Provider(s)"].dropna().unique())
 
