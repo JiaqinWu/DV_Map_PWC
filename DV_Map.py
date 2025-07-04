@@ -67,12 +67,12 @@ st.markdown("")
 
 
 intercepts_labels = {
-    "0": "Community Services",
-    "1": "Law Enforcement",
-    "2": "Detention & Hearings",
-    "3": "Jails/Courts",
-    "4": "Reentry",
-    "5": "Comm Corrections"
+    "1": "Community Services",
+    "2": "Law Enforcement",
+    "3": "Detention & Hearings",
+    "4": "Jails/Courts",
+    "5": "Reentry",
+    "6": "Comm Corrections"
 }
 ordered_intercepts = [intercepts_labels[k] for k in sorted(intercepts_labels.keys())]
 
