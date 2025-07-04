@@ -137,7 +137,7 @@ base = alt.Chart(merged).mark_rect().encode(
     ),
     y=alt.Y("Provider(s):N", title=''),
     color=alt.value("#eeeeee"),
-    tooltip=None
+    tooltip=[]
 )
 
 highlight = alt.Chart(merged[merged["assigned"] == 1]).mark_rect().encode(
@@ -160,7 +160,7 @@ highlight = alt.Chart(merged[merged["assigned"] == 1]).mark_rect().encode(
         ],
         legend=None
     ),
-    tooltip=None
+    tooltip=[]
 )
 
 chart = (base + highlight).properties(
