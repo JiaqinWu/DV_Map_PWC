@@ -58,6 +58,14 @@ st.markdown(
     section[data-testid="stSidebar"] * {
         font-family: 'Times New Roman', Times, serif !important;
     }
+    div[data-baseweb="select"] * {
+        font-family: 'Times New Roman', Times, serif !important;
+    }
+    label[for^="provider_detail_select"] {
+        font-family: 'Times New Roman', Times, serif !important;
+        font-size: 16px !important;
+        font-weight: bold;
+    }
     </style>
     """,
     unsafe_allow_html=True
