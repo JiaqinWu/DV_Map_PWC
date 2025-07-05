@@ -99,17 +99,20 @@ def clear_selections():
     st.session_state["intercepts_select"] = []
 
 if st.sidebar.button("Update Assignment", on_click=clear_selections):
-    provider_cells = worksheet1.findall(selected_provider)
-    if provider_cells:
-        row = provider_cells[0].row
-        intercept_keys = [k for k, v in intercepts_labels.items() if v in selected_intercepts]
-        INTERCEPTS_COLUMN_INDEX = 9
-        worksheet1.update_cell(row, INTERCEPTS_COLUMN_INDEX, ",".join(intercept_keys))
-        st.sidebar.success("Assignment updated!")
-        time.sleep(3)
-        st.rerun()
+    if selected_provider and isinstance(selected_provider, str):
+        provider_cells = worksheet1.findall(selected_provider)
+        if provider_cells:
+            row = provider_cells[0].row
+            intercept_keys = [k for k, v in intercepts_labels.items() if v in selected_intercepts]
+            INTERCEPTS_COLUMN_INDEX = 9
+            worksheet1.update_cell(row, INTERCEPTS_COLUMN_INDEX, ",".join(intercept_keys))
+            st.sidebar.success("Assignment updated!")
+            time.sleep(3)
+            st.rerun()
+        else:
+            st.sidebar.error("Provider not found in sheet.")
     else:
-        st.sidebar.error("Provider not found in sheet.")
+        st.sidebar.error("Please select a provider before updating assignment.")
 
 
 def smart_split(val):
@@ -153,7 +156,7 @@ base = alt.Chart(merged).mark_rect().encode(
         title='',
         axis=alt.Axis(
             labelAngle=0,
-            labelFontSize=9,
+            labelFontSize=7,
             labelLimit=350,
             labelPadding=10
         )
