@@ -94,11 +94,8 @@ selected_provider = st.sidebar.selectbox("Select Provider", all_providers, key="
 intercept_options = list(intercepts_labels.values())
 selected_intercepts = st.sidebar.multiselect("Assign Intercepts", intercept_options, key="intercepts_select")
 
-def clear_selections():
-    st.session_state["provider_select"] = None
-    st.session_state["intercepts_select"] = []
 
-if st.sidebar.button("Update Assignment", on_click=clear_selections):
+if st.sidebar.button("Update Assignment"):
     if selected_provider and isinstance(selected_provider, str):
         provider_cells = worksheet1.findall(selected_provider)
         if provider_cells:
