@@ -88,12 +88,16 @@ ordered_intercepts = [intercepts_labels[k] for k in sorted(intercepts_labels.key
 
 # Sidebar UI
 st.sidebar.header("Select A Provider and Assign Intercept(s)")
-all_providers = df["Provider(s)"].dropna().unique().tolist()
+all_providers = df["Provider(s)"].dropna().unique().tolist().sort(key=lambda x: x.lower())
 selected_provider = st.sidebar.selectbox("Select Provider", all_providers, key="provider_select")
 intercept_options = list(intercepts_labels.values())
 selected_intercepts = st.sidebar.multiselect("Assign Intercepts", intercept_options, key="intercepts_select")
 
-if st.sidebar.button("Update Assignment"):
+def clear_selections():
+    st.session_state["provider_select"] = None
+    st.session_state["intercepts_select"] = []
+
+if st.sidebar.button("Update Assignment", on_click=clear_selections):
     provider_cells = worksheet1.findall(selected_provider)
     if provider_cells:
         row = provider_cells[0].row
@@ -101,9 +105,6 @@ if st.sidebar.button("Update Assignment"):
         INTERCEPTS_COLUMN_INDEX = 9
         worksheet1.update_cell(row, INTERCEPTS_COLUMN_INDEX, ",".join(intercept_keys))
         st.sidebar.success("Assignment updated!")
-        # Clear selections
-        st.session_state["provider_select"] = None
-        st.session_state["intercepts_select"] = []
         time.sleep(3)
         st.rerun()
     else:
