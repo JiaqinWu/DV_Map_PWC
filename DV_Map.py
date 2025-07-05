@@ -88,7 +88,8 @@ ordered_intercepts = [intercepts_labels[k] for k in sorted(intercepts_labels.key
 
 # Sidebar UI
 st.sidebar.header("Select A Provider and Assign Intercept(s)")
-all_providers = df["Provider(s)"].dropna().unique().tolist().sort(key=lambda x: x.lower())
+all_providers = df["Provider(s)"].dropna().unique().tolist()
+all_providers.sort(key=lambda x: x.lower())
 selected_provider = st.sidebar.selectbox("Select Provider", all_providers, key="provider_select")
 intercept_options = list(intercepts_labels.values())
 selected_intercepts = st.sidebar.multiselect("Assign Intercepts", intercept_options, key="intercepts_select")
