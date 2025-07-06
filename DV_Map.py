@@ -47,7 +47,6 @@ try:
 except Exception as e:
     st.error(f"Error fetching data from Google Sheets: {str(e)}")
 
-st.set_page_config(layout="wide")
 st.markdown(
     "<div style='text-align: center;'><img src='https://github.com/JiaqinWu/GRIT_Website/raw/main/logo1.png' width='200'></div>",
     unsafe_allow_html=True
