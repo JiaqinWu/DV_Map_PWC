@@ -9,6 +9,12 @@ from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
 
+st.set_page_config(
+        page_title="DV Map - Prince William County",
+        page_icon="https://github.com/JiaqinWu/GRIT_Website/raw/main/logo1.png", 
+        layout="centered"
+    ) 
+
 scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets', "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
 #creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
 # Use Streamlit's secrets management
