@@ -159,7 +159,7 @@ base = alt.Chart(merged).mark_rect().encode(
         axis=alt.Axis(
             labelAngle=45,
             labelFontSize=8,
-            labelLimit=350,
+            labelLimit=400,
             labelPadding=10,
             orient="top"
         )
@@ -179,7 +179,7 @@ highlight = alt.Chart(merged[merged["assigned"] == 1]).mark_rect().encode(
         axis=alt.Axis(
             labelAngle=45,
             labelFontSize=8,
-            labelLimit=350,
+            labelLimit=400,
             labelPadding=10,
             orient="top"
         )
