@@ -160,7 +160,8 @@ base = alt.Chart(merged).mark_rect().encode(
             labelAngle=0,
             labelFontSize=7,
             labelLimit=350,
-            labelPadding=10
+            labelPadding=10,
+            orient="top"
         )
     ),
     y=alt.Y("Provider(s):N", title=''),
@@ -179,7 +180,8 @@ highlight = alt.Chart(merged[merged["assigned"] == 1]).mark_rect().encode(
             labelAngle=0,
             labelFontSize=9,
             labelLimit=350,
-            labelPadding=10
+            labelPadding=10,
+            orient="top"
         )
     ),
     y=alt.Y("Provider(s):N"),
