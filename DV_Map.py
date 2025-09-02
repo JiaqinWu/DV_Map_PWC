@@ -108,10 +108,8 @@ if selected_provider == "Add New Provider":
     new_primary_contact = st.sidebar.text_input("Enter Primary Contact Person (Name; Email):", key="new_primary_contact")
     if new_primary_contact:
         new_primary_contact = new_primary_contact
-    new_primary_contact_email = st.sidebar.text_input("Enter Primary Contact Email:", key="new_primary_contact_email")
-    if new_primary_contact_email:
         new_primary_contact_email = new_primary_contact_email
-    new_description_of_services = st.sidebar.text_input("Enter Description of Services:", key="new_description_of_services")
+    new_description_of_services = st.sidebar.text_input("Enter Description of Services, Intervention, or Activity:", key="new_description_of_services")
     if new_description_of_services:
         new_description_of_services = new_description_of_services
     new_recipients = st.sidebar.text_input("Enter Recipients:", key="new_recipients")
@@ -152,15 +150,14 @@ if st.sidebar.button("Update Assignment"):
                     new_row = [""] * len(headers)  
                     new_row[0] = selected_provider  
                     new_row[1] = new_primary_contact
-                    new_row[2] = new_primary_contact_email
-                    new_row[3] = new_description_of_services
-                    new_row[4] = new_recipients
-                    new_row[5] = new_criteria_for_who_receives_the_service
-                    new_row[6] = new_research_or_best_practice_supported_practice
-                    new_row[7] = new_legally_mandated_practice
-                    new_row[8] = new_notes
-                    new_row[9] = ",".join(intercept_keys)
-                    new_row[10] = new_gaps
+                    new_row[2] = new_description_of_services
+                    new_row[3] = new_recipients
+                    new_row[4] = new_criteria_for_who_receives_the_service
+                    new_row[5] = new_research_or_best_practice_supported_practice
+                    new_row[6] = new_legally_mandated_practice
+                    new_row[7] = new_notes
+                    new_row[8] = ",".join(intercept_keys)
+                    new_row[9] = new_gaps
                     
                     # Append the new row
                     worksheet1.append_row(new_row)
@@ -180,7 +177,7 @@ if st.sidebar.button("Update Assignment"):
                 INTERCEPTS_COLUMN_INDEX = 9
                 worksheet1.update_cell(row, INTERCEPTS_COLUMN_INDEX, ",".join(intercept_keys))
                 st.sidebar.success("Assignment updated!")
-                time.sleep(3)
+                time.sleep(2)
                 st.rerun()
             else:
                 st.sidebar.error("Provider not found in sheet.")
