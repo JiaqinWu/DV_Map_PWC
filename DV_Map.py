@@ -101,11 +101,37 @@ provider_options = ["Add New Provider"] + all_providers
 selected_provider = st.sidebar.selectbox("Select Provider", provider_options, key="provider_select")
 
 # Show name input field if "Add New Provider" is selected
-new_provider_name = ""
 if selected_provider == "Add New Provider":
     new_provider_name = st.sidebar.text_input("Enter New Provider Name:", key="new_provider_name")
     if new_provider_name:
         selected_provider = new_provider_name
+    new_primary_contact = st.sidebar.text_input("Enter Primary Contact Person (Name; Email):", key="new_primary_contact")
+    if new_primary_contact:
+        new_primary_contact = new_primary_contact
+    new_primary_contact_email = st.sidebar.text_input("Enter Primary Contact Email:", key="new_primary_contact_email")
+    if new_primary_contact_email:
+        new_primary_contact_email = new_primary_contact_email
+    new_description_of_services = st.sidebar.text_input("Enter Description of Services:", key="new_description_of_services")
+    if new_description_of_services:
+        new_description_of_services = new_description_of_services
+    new_recipients = st.sidebar.text_input("Enter Recipients:", key="new_recipients")
+    if new_recipients:
+        new_recipients = new_recipients
+    new_criteria_for_who_receives_the_service = st.sidebar.text_input("Enter Criteria for Who Receives the Service:", key="new_criteria_for_who_receives_the_service")
+    if new_criteria_for_who_receives_the_service:
+        new_criteria_for_who_receives_the_service = new_criteria_for_who_receives_the_service
+    new_research_or_best_practice_supported_practice = st.sidebar.text_input("Enter Research or Best Practice Supported Practice:", key="new_research_or_best_practice_supported_practice")
+    if new_research_or_best_practice_supported_practice:
+        new_research_or_best_practice_supported_practice = new_research_or_best_practice_supported_practice
+    new_legally_mandated_practice = st.sidebar.text_input("Enter Legally Mandated Practice:", key="new_legally_mandated_practice")
+    if new_legally_mandated_practice:
+        new_legally_mandated_practice = new_legally_mandated_practice
+    new_notes = st.sidebar.text_input("Enter Notes:", key="new_notes")
+    if new_notes:
+        new_notes = new_notes
+    new_gaps = st.sidebar.text_input("Enter Gaps:", key="new_gaps")
+    if new_gaps:
+        new_gaps = new_gaps
 
 intercept_options = list(intercepts_labels.values())
 selected_intercepts = st.sidebar.multiselect("Assign Intercepts", intercept_options, key="intercepts_select")
@@ -123,10 +149,18 @@ if st.sidebar.button("Update Assignment"):
                     
                     # Create a new row with the provider name and intercepts
                     intercept_keys = [k for k, v in intercepts_labels.items() if v in selected_intercepts]
-                    new_row = [""] * len(headers)  # Initialize with empty strings
-                    new_row[0] = selected_provider  # Provider name in first column
-                    if len(new_row) > 9:  # Make sure we have enough columns
-                        new_row[9] = ",".join(intercept_keys)  # Intercepts in column 10 (index 9)
+                    new_row = [""] * len(headers)  
+                    new_row[0] = selected_provider  
+                    new_row[1] = new_primary_contact
+                    new_row[2] = new_primary_contact_email
+                    new_row[3] = new_description_of_services
+                    new_row[4] = new_recipients
+                    new_row[5] = new_criteria_for_who_receives_the_service
+                    new_row[6] = new_research_or_best_practice_supported_practice
+                    new_row[7] = new_legally_mandated_practice
+                    new_row[8] = new_notes
+                    new_row[9] = ",".join(intercept_keys)
+                    new_row[10] = new_gaps
                     
                     # Append the new row
                     worksheet1.append_row(new_row)
@@ -143,7 +177,7 @@ if st.sidebar.button("Update Assignment"):
             if provider_cells:
                 row = provider_cells[0].row
                 intercept_keys = [k for k, v in intercepts_labels.items() if v in selected_intercepts]
-                INTERCEPTS_COLUMN_INDEX = 10
+                INTERCEPTS_COLUMN_INDEX = 9
                 worksheet1.update_cell(row, INTERCEPTS_COLUMN_INDEX, ",".join(intercept_keys))
                 st.sidebar.success("Assignment updated!")
                 time.sleep(3)
