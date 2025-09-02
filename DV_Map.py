@@ -143,7 +143,7 @@ if st.sidebar.button("Update Assignment"):
             if provider_cells:
                 row = provider_cells[0].row
                 intercept_keys = [k for k, v in intercepts_labels.items() if v in selected_intercepts]
-                INTERCEPTS_COLUMN_INDEX = 9
+                INTERCEPTS_COLUMN_INDEX = 8
                 worksheet1.update_cell(row, INTERCEPTS_COLUMN_INDEX, ",".join(intercept_keys))
                 st.sidebar.success("Assignment updated!")
                 time.sleep(3)
