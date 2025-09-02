@@ -95,26 +95,63 @@ ordered_intercepts = [intercepts_labels[k] for k in sorted(intercepts_labels.key
 st.sidebar.header("Select A Provider and Assign Intercept(s)")
 all_providers = df["Provider(s)"].dropna().unique().tolist()
 all_providers.sort(key=lambda x: x.lower())
-selected_provider = st.sidebar.selectbox("Select Provider", all_providers, key="provider_select")
+
+# Add "Add New Provider" option to the list
+provider_options = ["Add New Provider"] + all_providers
+selected_provider = st.sidebar.selectbox("Select Provider", provider_options, key="provider_select")
+
+# Show name input field if "Add New Provider" is selected
+new_provider_name = ""
+if selected_provider == "Add New Provider":
+    new_provider_name = st.sidebar.text_input("Enter New Provider Name:", key="new_provider_name")
+    if new_provider_name:
+        selected_provider = new_provider_name
+
 intercept_options = list(intercepts_labels.values())
 selected_intercepts = st.sidebar.multiselect("Assign Intercepts", intercept_options, key="intercepts_select")
 
 
 if st.sidebar.button("Update Assignment"):
-    if selected_provider and isinstance(selected_provider, str):
-        provider_cells = worksheet1.findall(selected_provider)
-        if provider_cells:
-            row = provider_cells[0].row
-            intercept_keys = [k for k, v in intercepts_labels.items() if v in selected_intercepts]
-            INTERCEPTS_COLUMN_INDEX = 9
-            worksheet1.update_cell(row, INTERCEPTS_COLUMN_INDEX, ",".join(intercept_keys))
-            st.sidebar.success("Assignment updated!")
-            time.sleep(3)
-            st.rerun()
+    if selected_provider and isinstance(selected_provider, str) and selected_provider != "Add New Provider":
+        # Check if this is a new provider (not in existing list)
+        if selected_provider not in all_providers:
+            # Add new provider to the sheet
+            if new_provider_name and selected_intercepts:
+                try:
+                    # Get the headers from the first row
+                    headers = worksheet1.row_values(1)
+                    
+                    # Create a new row with the provider name and intercepts
+                    intercept_keys = [k for k, v in intercepts_labels.items() if v in selected_intercepts]
+                    new_row = [""] * len(headers)  # Initialize with empty strings
+                    new_row[0] = selected_provider  # Provider name in first column
+                    if len(new_row) > 9:  # Make sure we have enough columns
+                        new_row[9] = ",".join(intercept_keys)  # Intercepts in column 10 (index 9)
+                    
+                    # Append the new row
+                    worksheet1.append_row(new_row)
+                    st.sidebar.success(f"New provider '{selected_provider}' added successfully!")
+                    time.sleep(2)
+                    st.rerun()
+                except Exception as e:
+                    st.sidebar.error(f"Error adding new provider: {str(e)}")
+            else:
+                st.sidebar.error("Please enter a provider name and select at least one intercept.")
         else:
-            st.sidebar.error("Provider not found in sheet.")
+            # Update existing provider
+            provider_cells = worksheet1.findall(selected_provider)
+            if provider_cells:
+                row = provider_cells[0].row
+                intercept_keys = [k for k, v in intercepts_labels.items() if v in selected_intercepts]
+                INTERCEPTS_COLUMN_INDEX = 9
+                worksheet1.update_cell(row, INTERCEPTS_COLUMN_INDEX, ",".join(intercept_keys))
+                st.sidebar.success("Assignment updated!")
+                time.sleep(3)
+                st.rerun()
+            else:
+                st.sidebar.error("Provider not found in sheet.")
     else:
-        st.sidebar.error("Please select a provider before updating assignment.")
+        st.sidebar.error("Please select a provider and enter a name if adding new provider.")
 
 
 def smart_split(val):
@@ -233,7 +270,9 @@ provider_detail_fields = [
 ]
 
 
-provider_detail_select = st.selectbox("Select a provider to view details:", all_providers, key="provider_detail_select")
+# Update all_providers list for the provider details section
+updated_all_providers = sorted(df["Provider(s)"].dropna().unique())
+provider_detail_select = st.selectbox("Select a provider to view details:", updated_all_providers, key="provider_detail_select")
 
 provider_row = df[df["Provider(s)"] == provider_detail_select]
 
