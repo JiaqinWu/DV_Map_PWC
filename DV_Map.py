@@ -108,7 +108,6 @@ if selected_provider == "Add New Provider":
     new_primary_contact = st.sidebar.text_input("Enter Primary Contact Person (Name; Email):", key="new_primary_contact")
     if new_primary_contact:
         new_primary_contact = new_primary_contact
-        new_primary_contact_email = new_primary_contact_email
     new_description_of_services = st.sidebar.text_input("Enter Description of Services, Intervention, or Activity:", key="new_description_of_services")
     if new_description_of_services:
         new_description_of_services = new_description_of_services
